@@ -1,0 +1,25 @@
+.marioWorld{
+    height:100%;
+    width:100%;
+}
+
+.mario{
+    position:relative;
+    top: 200px;
+    left: 100px;
+    width:50px;
+}
+
+.marioJump{
+    position:relative;
+    top: 200px;
+    left: 100px;
+    width:50px;
+    animation: jump 1s forwards;
+}
+
+@keyframes jump{
+    0%{top: 200px }
+    50%{top: 75px}
+    100%{top:200px}
+}

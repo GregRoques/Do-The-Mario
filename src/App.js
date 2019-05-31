@@ -1,26 +1,56 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { Component } from 'react';
+import Mario from './mario.js'
+import './mario.css'
+import './App.css'
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+var hold = false //*
+
+class App extends Component {
+
+  state={
+    jump: false
+  }
+
+  makeJump = (e) =>{
+    if (hold !== true){ // the "hold" functionality helps avoid keydown repeat
+      this.setState({
+          jump:true
+        });
+        this.jumpDown();
+        hold = true   // *
+    }
+  }  
+
+  jumpDown = () =>{
+    setTimeout(()=>{
+      this.setState({
+        jump: false
+      })
+    }, 1000)
+  }
+
+  keyUpListener = (e) =>{
+    if (e.keyCode === 13){
+      hold = false //*
+    }
+  }
+
+  render(){
+    window.addEventListener('keydown', e =>{
+      this.makeJump(e)
+    }) 
+    window.addEventListener('keyup', e =>{
+      this.keyUpListener(e) //*
+    }) 
+
+    return (
+      <div className="App">
+          <div className='marioWorld'>
+              <Mario jump={this.state.jump}/>
+          </div>
+      </div>
+    );
+  }
 }
 
 export default App;
