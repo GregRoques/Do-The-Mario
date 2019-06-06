@@ -7,14 +7,15 @@
 * Challenges and Solutions
 
 # Background
-Recently, I served as a Developer In Residence at DigitalCrafts, the coding full-stack coding bootcamp I completed earlier this year. In this role, I assisted students in another cohort to master the concepts and technologies introduced throughout the course, and provided individual assistance as they worked on their final projects. Unlike my cohort, whose final projects mostly consisted of daily assistant and organization apps, this class was encouraged to make games using a PERN stack (PostGreSQL, Express, React/Redux and Node).
+Recently, I served as a Developer In Residence at DigitalCrafts, the full-stack coding bootcamp I completed earlier this year. In this role, I assisted students in another cohort to master the concepts and technologies introduced throughout the course, and provided individual assistance as they worked on their final projects. 
 
-These projects spanned the retro-gamut from open-world RPGs to turn-based fighters in the style of the early Pokémon Game Boy titles. One of the most common issues I was asked to assist with were rendering character attack animations – this included both rendering the events, as well as resolving a pesky “keydown” repeat trigger that would cause many an app to freeze up.
+Unlike my cohort, whose final projects mostly consisted of daily assistant and organization apps, this class was encouraged to create web-based games using a PERN stack (PostGreSQL, Express, React/Redux and Node). These projects spanned the retro-gamut from open-world RPGs to turn-based fighters in the style of the early Pokémon Game Boy titles. 
 
+One of the most common issues I was asked to assist with were rendering character attack animations: this included both rendering the events, as well as resolving a pesky “keydown” repeat event trigger that would cause each app to freeze up.
 
-This application is by no-means a complete product, nor a proper presentation of my comprehensive CSS abilities. Rather, this was a quick demonstration I threw together for two groups with a solution that could be implemented in both of their projects. As it was such a common request, I decided to share the solution to my GitHub.
+This application is by no-means a "complete" product, nor a proper presentation of my comprehensive CSS or React abilities. Rather, this was a quick demonstration I threw together for two groups with a solution that could be implemented in both of their projects. As it was such a common request, I decided to share the solution here to my GitHub.
 
- For this illustration, I simply make the classic presentation of Mario from the original Super Mario Bros. NES game jump when the return/enter key is pressed.
+For this illustration, I simply make the classic presentation of Mario from the original NES Super Mario Bros. game jump when the return/enter key is pressed.
 
 
 # Technologies
@@ -24,7 +25,7 @@ This application is by no-means a complete product, nor a proper presentation of
 
 # Challenges & Solutions
 ###   1. Event-based animation
-First, we will establish an animation to take place on a “keydown” event. First, I created a dummy component that would render a different image depending on its props. 
+First, we will establish an animation to take place on a “keydown” event. For this, I created a dummy component that would render a different image depending on its props. 
 
 ```
 if(!props.jump){
@@ -40,7 +41,7 @@ if(!props.jump){
 
 ![mario still](public/mario1.png)
 
-For the second image, I created a keyframe animation of 1 second to illustrate the jump:
+For the second image, I created a "keyframes" animation lasting 1 second to illustrate the jump:
 
 ```
 .marioJump{
@@ -67,7 +68,7 @@ Next, I created the "keydown" listener that would execute the jump when the "ret
       this.makeJump(e)
     }) 
 ```    
-Notice, the jumpDown() command returns mario to his original state after a setTimeout of 1s, exactly when his "keyframes" animation ends.
+Notice, the below jumpDown() command returns Mario to his original state after a "setTimeout" of 1s, exactly when his "keyframes" animation ends.
 
 ```
  state={
@@ -80,8 +81,6 @@ Notice, the jumpDown() command returns mario to his original state after a setTi
           jump:true
         });
         this.jumpDown();
-       
-    
   }  
 
   jumpDown = () =>{
@@ -103,7 +102,7 @@ Notice, the jumpDown() command returns mario to his original state after a setTi
 ```
 
 ###   2. Fixing the KeyDown Freeze
-We're not quiet there yet. You will notice that if you tap and hold the return key, not only will our mustachioed Italian-plumber friend continue to jump endlessly. Further, even holding down the key for more than 1s can rack up tens-of-thousands state triggers, overloading the DOM and freezing our program.
+We're not quiet there yet. You will notice that if you tap and hold the return key, our mustachioed-plumber friend continue to jump endlessly. Further, even holding down the key for more than 1s can rack up tens-of-thousands "state.jump === true" triggers, overloading the DOM and freezing our program.
 
 ![mario freeze](public/freeze.png)
 
@@ -125,9 +124,9 @@ var hold = false
   }  
   ```
 
-  By adding the hold condition to our keydown, we set it so that jump is only triggered if hold === false; here, hold is set to 'true' just as soon as our state is set.
+  By adding the hold condition to our keydown, we set it so that jump is only triggered if hold === false; here, hold is set to 'true' just after our state is set.
 
-  To set it back to true, we set a "keyup" event listener. 
+  To set it back to true, we establish a "keyup" event listener. 
 
   ```
     render(){
@@ -145,7 +144,7 @@ var hold = false
     }
   }
 ```
-There – now it Mario behaves just like he did in good old 1985. If you wanted to set it so that Mario jumps again after each complete jump, you could always used a setTimeout function to trigger the "hold" condition to default to false in the makeJump() function after a given time, say 1.5s.
+There – now Mario behaves just like he did in good old 1985. If you wanted to set it so that Mario jumps again after each complete jump while "keydown", you could always used a setTimeout() function to trigger the "hold" condition to default to false in the makeJump() function after a given time, say 1.5s.
 
 ______________________________________________
 
