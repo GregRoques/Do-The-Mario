@@ -1,68 +1,152 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+# Event Listener Animation Tutorial
 
-## Available Scripts
+# Contents
 
-In the project directory, you can run:
+* Background
+* Technologies
+* Challenges and Solutions
 
-### `npm start`
+# Background
+Recently, I served as a Developer In Residence at DigitalCrafts, the coding full-stack coding bootcamp I completed earlier this year. In this role, I assisted students in another cohort to master the concepts and technologies introduced throughout the course, and provided individual assistance as they worked on their final projects. Unlike my cohort, whose final projects mostly consisted of daily assistant and organization apps, this class was encouraged to make games using a PERN stack (PostGreSQL, Express, React/Redux and Node).
 
-Runs the app in the development mode.<br>
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+These projects spanned the retro-gamut from open-world RPGs to turn-based fighters in the style of the early Pokémon Game Boy titles. One of the most common issues I was asked to assist with were rendering character attack animations – this included both rendering the events, as well as resolving a pesky “keydown” repeat trigger that would cause many an app to freeze up.
 
-The page will reload if you make edits.<br>
-You will also see any lint errors in the console.
 
-### `npm test`
+This application is by no-means a complete product, nor a proper presentation of my comprehensive CSS abilities. Rather, this was a quick demonstration I threw together for two groups with a solution that could be implemented in both of their projects. As it was such a common request, I decided to share the solution to my GitHub.
 
-Launches the test runner in the interactive watch mode.<br>
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+ For this illustration, I simply make the classic presentation of Mario from the original Super Mario Bros. NES game jump when the return/enter key is pressed.
 
-### `npm run build`
 
-Builds the app for production to the `build` folder.<br>
-It correctly bundles React in production mode and optimizes the build for the best performance.
+# Technologies
+- React
+- HTML/CSS/JavaScript
 
-The build is minified and the filenames include the hashes.<br>
-Your app is ready to be deployed!
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+# Challenges & Solutions
+###   1. Event-based animation
+First, we will establish an animation to take place on a “keydown” event. First, I created a dummy component that would render a different image depending on its props. 
 
-### `npm run eject`
+```
+if(!props.jump){
+        return(
+            <img className={'mario'} src='./mario1.png'/>
+        )
+    }else{
+        return(
+            <img className={'marioJump'} src='./mario2.png'/>
+        )
+    }
+```
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+![mario still](public/mario1.png)
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+For the second image, I created a keyframe animation of 1 second to illustrate the jump:
 
-Instead, it will copy all the configuration files and the transitive dependencies (Webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+```
+.marioJump{
+    position:relative;
+    top: 200px;
+    left: 100px;
+    width:50px;
+    animation: jump 1s forwards;
+}
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+@keyframes jump{
+    0%{top: 200px }
+    50%{top: 75px}
+    100%{top:200px}
+}
+```
 
-## Learn More
+![mario jump](public/mario2.png)
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+Next, I created the "keydown" listener that would execute the jump when the "return/enter" key is pressed.
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+```
+    window.addEventListener('keydown', e =>{
+      this.makeJump(e)
+    }) 
+```    
+Notice, the jumpDown() command returns mario to his original state after a setTimeout of 1s, exactly when his "keyframes" animation ends.
 
-### Code Splitting
+```
+ state={
+    jump: false
+  }
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/code-splitting
+  makeJump = (e) =>{
+    
+      this.setState({
+          jump:true
+        });
+        this.jumpDown();
+       
+    
+  }  
 
-### Analyzing the Bundle Size
+  jumpDown = () =>{
+    setTimeout(()=>{
+      this.setState({
+        jump: false
+      })
+    }, 1000)
+  }
+```
+```
+    return (
+      <div className="App">
+          <div className='marioWorld'>
+              <Mario jump={this.state.jump}/> //sends state to dummy component as props.
+          </div>
+      </div>
+    );
+```
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size
+###   2. Fixing the KeyDown Freeze
+We're not quiet there yet. You will notice that if you tap and hold the return key, not only will our mustachioed Italian-plumber friend continue to jump endlessly. Further, even holding down the key for more than 1s can rack up tens-of-thousands state triggers, overloading the DOM and freezing our program.
 
-### Making a Progressive Web App
+![mario freeze](public/freeze.png)
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app
+Anyone how was fortunate enough to nab an NES classic while they were still available knows that if you hold down the A button, Mario only jumps once until you release the button (keyup) and press it (keydown) again. Fortunately, this is an easy fix. 
 
-### Advanced Configuration
+```
+var hold = false
+```
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/advanced-configuration
+```
+  makeJump = (e) =>{
+    if (hold !== true){ // the "hold" functionality helps avoid keydown repeat
+      this.setState({
+          jump:true
+        });
+        this.jumpDown();
+        hold = true   // *
+    }
+  }  
+  ```
 
-### Deployment
+  By adding the hold condition to our keydown, we set it so that jump is only triggered if hold === false; here, hold is set to 'true' just as soon as our state is set.
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/deployment
+  To set it back to true, we set a "keyup" event listener. 
 
-### `npm run build` fails to minify
+  ```
+    render(){
+    window.addEventListener('keydown', e =>{
+      this.makeJump(e)
+    }) 
+    window.addEventListener('keyup', e =>{
+      this.keyUpListener(e) 
+    }) 
+```
+```
+  keyUpListener = (e) =>{
+    if (e.keyCode === 13){
+      hold = false 
+    }
+  }
+```
+There – now it Mario behaves just like he did in good old 1985. If you wanted to set it so that Mario jumps again after each complete jump, you could always used a setTimeout function to trigger the "hold" condition to default to false in the makeJump() function after a given time, say 1.5s.
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
+______________________________________________
+
+I hope this simple illustration was helpful to any other students looking to develop a game using React/Redux.

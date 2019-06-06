@@ -31,7 +31,7 @@ class App extends Component {
 
   keyUpListener = (e) =>{
     if (e.keyCode === 13){
-      hold = false //*
+      hold = false 
     }
   }
 
@@ -40,7 +40,7 @@ class App extends Component {
       this.makeJump(e)
     }) 
     window.addEventListener('keyup', e =>{
-      this.keyUpListener(e) //*
+      this.keyUpListener(e) 
     }) 
 
     return (
