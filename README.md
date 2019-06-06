@@ -61,7 +61,7 @@ For the second image, I created a "keyframes" animation lasting 1 second to illu
 
 ![mario jump](public/mario2.png)
 
-Next, I created the "keydown" listener that would execute the jump when the "return/enter" key is pressed.
+Next, I created the "keydown" listener that would execute the jump when the return/enter key is pressed.
 
 ```
     window.addEventListener('keydown', e =>{
@@ -102,7 +102,7 @@ Notice, the below jumpDown() command returns Mario to his original state after a
 ```
 
 ###   2. Fixing the KeyDown Freeze
-We're not quiet there yet. You will notice that if you tap and hold the return key, our mustachioed-plumber friend continue to jump endlessly. Further, even holding down the key for more than 1s can rack up tens-of-thousands "state.jump === true" triggers, overloading the DOM and freezing our program.
+We're not quiet there yet. You will notice that if you tap and hold down the return/enter key, our mustachioed-plumber friend continue to jump endlessly. Further, even holding down the key for more than 1s can rack up tens-of-thousands "state.jump === true" triggers, overloading the DOM and freezing our program.
 
 ![mario freeze](public/freeze.png)
 
